@@ -8,23 +8,13 @@ class App extends Component {
     this.state = {
       configDescData: {
         wallDescConfig:
-        `\r
-        Input example:\r
-        101101\r
-        111111\r
-        111111\r\n
-        or\r\n
-        101101111111111111`,
+        `Input example:\r\n101101111111111111`,
         bricksDescConfig: 
-        `\r
-        Input example:\r
-        114\r
-        126\r
-        131\r\n
-        or\r\n
-        114126131`
+        `Input example:\r\n114126131`
       },
       inputData: {
+        rows: 0,
+        columns: 0,
         wallTextData: "",
         bricksTextData: "",
         wallData: [],
@@ -34,18 +24,56 @@ class App extends Component {
     };
   }
 
-  onChangeWallData = (event) => {
-    this.setState({
+  onColumnsChange = async (event) => {
+    await this.setState({
       inputData: {
-        wallTextData: event.target.value
+        columns: +event.target.value.trim(),
+      }
+    });
+  }
+
+  onRowsChange = async (event) => {
+    await this.setState({
+      inputData: {
+        rows: +event.target.value.trim(),
+      }
+    });
+  }
+
+  onWallChangeData = async (event) => {
+    await this.setState({
+      inputData: {
+        wallTextData: event.target.value.trim(),
       }
     });
 
-    console.log(this.state.inputData.wallTextData);
+    let arr = [];
+
+    [...this.state.inputData.wallTextData].map(symb => arr.push(symb));
+
+    await this.setState({
+      inputData: {
+        wallData: arr,
+      }
+    });
   }
 
-  onChangeBricksData = (event) => {
-    
+  onBricksChangeData = async (event) => {
+    await this.setState({
+      inputData: {
+        bricksTextData: event.target.value.trim(),
+      }
+    });
+
+    let arr = [];
+
+    [...this.state.inputData.bricksTextData].map(symb => arr.push(symb));
+
+    await this.setState({
+      inputData: {
+        bricksData: arr,
+      }
+    });
   }
 
   render() {
@@ -57,27 +85,49 @@ class App extends Component {
             <h3 className="title">
               Wall structure config
             </h3>
-            <textarea className="config config-wall"
-                      cols="40"
-                      rows="10"
-                      placeholder={this.state.configDescData.wallDescConfig}
-                      value={this.state.inputData.wallTextData}
-                      onChange={this.onChangeWallData} ></textarea>
             <p>
-              Description: 1 - brick; 0 - hole.
+              Matrix size - i x j; i - columns, j - rows.
+            </p>
+            <div className="container">
+              <label>
+                i:
+                <input className="matrix-size columns"
+                      type="number"
+                      value={this.state.inputData.columns}
+                      onChange={this.onColumnsChange} />
+              </label>
+              <label>
+                j:
+                <input className="matrix-size rows"
+                      type="number"
+                      value={this.state.inputData.rows}
+                      onChange={this.onRowsChange} />
+              </label>
+              
+              <textarea className="config config-wall"
+                        cols="30"
+                        rows="5"
+                        placeholder={this.state.configDescData.wallDescConfig}
+                        value={this.state.inputData.wallTextData}
+                        onChange={this.onWallChangeData} ></textarea>
+            </div>
+            <p>
+              Description: 0 - hole; 1 - brick.
             </p>
             <hr />
             <h3 className="title">
               Bricks config
             </h3>
             <textarea className="config config-bricks"
-                      cols="40"
-                      rows="10"
+                      cols="30"
+                      rows="5"
                       placeholder={this.state.configDescData.bricksDescConfig}
+                      name="bricksTextData"
                       value={this.state.inputData.bricksTextData}
-                       ></textarea>
+                      onChange={this.onBricksChangeData}  ></textarea>
             <p>
-              Description: first digit - height,
+              Each brick has got three digits.
+              First digit - height,
                           second digit - width,
                           third digit - amount of bricks of such type.
             </p>
