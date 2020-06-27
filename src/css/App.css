@@ -1,4 +1,43 @@
 .App {
   text-align: center;
 }
+
+.App p {
+  margin: 10px 0;
+}
+
+.App .mailto:hover {
+  color: #00d2d3;
+}
+
+.App .title {
+  margin: 5px 0;
+  color: #00d2d3;
+}
+
+.App .config {
+  margin: 5px 0;
+  resize: none;
+  border-radius: 5px;
+  outline-color: red;
+  padding: 5px;
+}
+
+.App .submit-btn {
+  color: #fff;
+  text-transform: uppercase;
+  padding: 10px;
+  cursor: pointer;
+  outline: none;
+  border: #fff solid 2px;
+  border-radius: 10px;
+  background: none;
+  -webkit-transition: background .3s ease-in-out, color .3s ease-in-out;
+  transition: background .3s ease-in-out, color .3s ease-in-out;
+}
+
+.App .submit-btn:hover {
+  background: #fff;
+  color: #000;
+}
 /*# sourceMappingURL=App.css.map */
