@@ -22,6 +22,7 @@ class App extends Component {
         bricksData: []
       },
       calcData: {
+        wallSets: [],
         brickSets: []
       },
       result: "No"
@@ -64,7 +65,7 @@ class App extends Component {
     await this.setState({
       inputData: {
         ...this.state.inputData,
-        wallData: arr,
+        wallData: arr
       }
     });
   }
@@ -75,6 +76,17 @@ class App extends Component {
       inputData: {
         ...this.state.inputData,
         bricksTextData: event.target.value.trim(),
+      }
+    });
+
+    let arr = [];
+
+    [...this.state.inputData.bricksTextData].map(symb => arr.push(+symb));
+
+    await this.setState({
+      inputData: {
+        ...this.state.inputData,
+        bricksData: arr
       }
     });
   }
@@ -109,28 +121,59 @@ class App extends Component {
       return data;
   }
 
+  getBricks = (array) => {
+    let i = 1,
+        arr = [],
+        data = [];
+
+      array.map(el => {
+        
+        arr.push(el);
+
+        if (i%3 === 0 && arr.length > 0) {
+          data.push(arr);
+          arr = [];
+        }
+
+        i++;
+      });
+
+    return data;
+  }
+
   onSumbit = () => {
 
     console.log("Clicked button");
 
-    //101101111111111111
+    //101101111111111111 114126131
+
     let wall = this.state.inputData.wallData,
+        bricks = this.state.inputData.bricksData,
         cols = this.state.inputData.columns,
         rows = this.state.inputData.rows,
         matrix = cols*rows,
-        data = [];
+        dataWallStruct = [],
+        dataBricks = [];
 
-    //console.log("[1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1]");
-    //console.log("this.state.inputData.wallData - ", this.state.inputData.wallData);
+    /*console.log("[1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1]");
+    console.log("this.state.inputData.wallData - ", this.state.inputData.wallData);
+    console.log("this.state.inputData.bricksData - ", this.state.inputData.bricksData);
     console.log("wall - ", wall);
     console.log("wall.length - ", wall.length);
+    console.log("bricks - ", bricks);
+    console.log("bricks.length - ", bricks.length);
     console.log("cols - ", cols);
     console.log("rows - ", rows);
-    console.log("matrix - ", matrix);
+    console.log("matrix - ", matrix);*/
 
-    if (wall.length === matrix ) {
-      data = this.getWallStruct(wall, cols, matrix);
-      console.log("data - ", data);
+    if (wall.length === matrix && bricks.length%3 === 0) {
+
+      dataWallStruct = this.getWallStruct(wall, cols, matrix);
+      console.log("dataWallStruct - ", dataWallStruct);
+
+      dataBricks = this.getBricks(bricks);
+      console.log("dataBricks - ", dataBricks);
+
     } else {
       alert("Input data is wrong");
     }
