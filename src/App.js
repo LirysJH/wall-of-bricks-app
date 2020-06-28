@@ -18,8 +18,8 @@ class App extends Component {
         rows: 3,
         wallTextData: "",
         bricksTextData: "",
-        wallData: [],
-        bricksData: []
+        wallData: [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        bricksData: [1, 1, 4, 1, 2, 6, 1, 3, 1]
       },
       calcData: {
         wallSets: [],
@@ -93,6 +93,7 @@ class App extends Component {
 
   getWallStruct = (array, cols, matrix) => {
     let i = 1,
+        // eslint-disable-next-line
         j = 1,
         arr = [],
         data = [];
@@ -126,7 +127,7 @@ class App extends Component {
         arr = [],
         data = [];
 
-      array.map(el => {
+      array.forEach(el => {
         
         arr.push(el);
 
@@ -141,6 +142,16 @@ class App extends Component {
     return data;
   }
 
+  buildBricksArray = (array, result) => {
+    
+    array.forEach(el => {
+      for (let i = 0; i < el[2]; i++) {
+        result.push(el[1]);
+      }
+
+    });
+  }
+
   onSumbit = () => {
 
     console.log("Clicked button");
@@ -153,7 +164,9 @@ class App extends Component {
         rows = this.state.inputData.rows,
         matrix = cols*rows,
         dataWallStruct = [],
-        dataBricks = [];
+        dataBricks = [],
+        // eslint-disable-next-line
+        bricksArr = [];
 
     /*console.log("[1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1]");
     console.log("this.state.inputData.wallData - ", this.state.inputData.wallData);
@@ -169,10 +182,15 @@ class App extends Component {
     if (wall.length === matrix && bricks.length%3 === 0) {
 
       dataWallStruct = this.getWallStruct(wall, cols, matrix);
+      dataWallStruct = dataWallStruct.sort((a, b) => b.length - a.length);
       console.log("dataWallStruct - ", dataWallStruct);
 
       dataBricks = this.getBricks(bricks);
       console.log("dataBricks - ", dataBricks);
+
+      this.buildBricksArray(dataBricks, bricksArr);
+      bricksArr.sort((a, b) => b - a);
+      console.log("bricksArr - ", bricksArr);
 
     } else {
       alert("Input data is wrong");
