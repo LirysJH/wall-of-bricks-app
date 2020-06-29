@@ -32,7 +32,7 @@ class App extends Component {
     };
   }
 
-  onColumnsChange = async (event) => {
+  onColumnsChange = async (event) => { //changing columns value
     await this.setState({
       ...this.state,
       inputData: {
@@ -42,7 +42,7 @@ class App extends Component {
     });
   }
 
-  onRowsChange = async (event) => {
+  onRowsChange = async (event) => { //changing rows value
     await this.setState({
       ...this.state,
       inputData: {
@@ -52,7 +52,7 @@ class App extends Component {
     });
   }
 
-  onWallChangeData = async (event) => {
+  onWallChangeData = async (event) => { //changing wall config textarea
     await this.setState({
       ...this.state,
       inputData: {
@@ -73,7 +73,7 @@ class App extends Component {
     });
   }
 
-  onBricksChangeTextData = async (event) => {
+  onBricksChangeTextData = async (event) => { //changing bricks config textarea
     await this.setState({
       ...this.state,
       inputData: {
@@ -198,7 +198,14 @@ class App extends Component {
 
   onSumbit = () => {
 
-    //101101111111111111 114126131
+    /*
+      Data to test input,
+      IGNORE this
+
+      6 3
+      101101111111111111
+      114126131
+    */
 
     let wall = this.state.inputData.wallData,
         bricks = this.state.inputData.bricksData,
@@ -221,12 +228,11 @@ class App extends Component {
       bricksArr.sort((a, b) => b - a);
       flag = this.constructWall(dataWallStruct, bricksArr);
 
-      if (flag) {
+      if (flag) { //if wall is constructed
         this.setResult("Yes", "#1dd1a1");
       } else {
         this.setResult("No", "red");
       }
-
     } else {
       alert("Input data is wrong");
     }
