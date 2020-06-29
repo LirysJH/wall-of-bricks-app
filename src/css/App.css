@@ -103,4 +103,9 @@
   background: #fff;
   color: #000;
 }
+
+.App .advert {
+  color: red;
+  font-style: bold;
+}
 /*# sourceMappingURL=App.css.map */

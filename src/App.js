@@ -14,18 +14,21 @@ class App extends Component {
         `Input example:\r\n114126131`
       },
       inputData: {
-        columns: 6,
-        rows: 3,
+        columns: 0,
+        rows: 0,
         wallTextData: "",
         bricksTextData: "",
-        wallData: [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        bricksData: [1, 1, 4, 1, 2, 6, 1, 3, 1]
+        wallData: [],
+        bricksData: []
       },
       calcData: {
         wallSets: [],
         brickSets: []
       },
-      result: "No"
+      result: {
+        text: "",
+        color: ""
+      }
     };
   }
 
@@ -152,9 +155,48 @@ class App extends Component {
     });
   }
 
-  onSumbit = () => {
+  isZero = (number) => {
+   return number === 0;
+  }
 
-    console.log("Clicked button");
+  constructWall = (wallArr, bricksArr) => {
+    //Constructing Wall; shifting blocks
+
+    let wallEdited = wallArr,
+        i = 0,
+        flag = false;
+    
+    while (i < bricksArr.length) {
+      let count = bricksArr[i];
+
+      for (let arr of wallEdited) {
+        if (arr.length < count) continue;
+        arr.splice(0, count);
+        bricksArr.splice(i--, 1);
+        break;
+      }
+      i++;
+    }
+
+    let len = []; //length
+    
+    len = wallEdited.map(el => el.length );
+    flag = len.every(this.isZero);
+
+    return flag;
+  }
+
+  setResult = async (text, color) => {
+    await this.setState({
+      ...this.state,
+      result: {
+        text: text,
+        color: color
+      }
+    });
+  }
+
+  onSumbit = () => {
 
     //101101111111111111 114126131
 
@@ -166,31 +208,24 @@ class App extends Component {
         dataWallStruct = [],
         dataBricks = [],
         // eslint-disable-next-line
-        bricksArr = [];
+        bricksArr = [],
+        // eslint-disable-next-line
+        flag = false;
 
-    /*console.log("[1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1]");
-    console.log("this.state.inputData.wallData - ", this.state.inputData.wallData);
-    console.log("this.state.inputData.bricksData - ", this.state.inputData.bricksData);
-    console.log("wall - ", wall);
-    console.log("wall.length - ", wall.length);
-    console.log("bricks - ", bricks);
-    console.log("bricks.length - ", bricks.length);
-    console.log("cols - ", cols);
-    console.log("rows - ", rows);
-    console.log("matrix - ", matrix);*/
-
-    if (wall.length === matrix && bricks.length%3 === 0) {
+    if (wall.length === matrix && bricks.length%3 === 0 && matrix > 0) {
 
       dataWallStruct = this.getWallStruct(wall, cols, matrix);
       dataWallStruct = dataWallStruct.sort((a, b) => b.length - a.length);
-      console.log("dataWallStruct - ", dataWallStruct);
-
       dataBricks = this.getBricks(bricks);
-      console.log("dataBricks - ", dataBricks);
-
       this.buildBricksArray(dataBricks, bricksArr);
       bricksArr.sort((a, b) => b - a);
-      console.log("bricksArr - ", bricksArr);
+      flag = this.constructWall(dataWallStruct, bricksArr);
+
+      if (flag) {
+        this.setResult("Yes", "#1dd1a1");
+      } else {
+        this.setResult("No", "red");
+      }
 
     } else {
       alert("Input data is wrong");
@@ -248,8 +283,11 @@ class App extends Component {
             <p>
               Each brick has got three digits.
               First digit - height,
-                          second digit - width,
-                          third digit - amount of bricks of such type.
+              second digit - width,
+              third digit - amount of bricks of such type.
+              This currently works with height = 1 <span className="advert">
+                                                      only
+                                                    </span>
             </p>
           </section>
           <hr />
@@ -263,7 +301,9 @@ class App extends Component {
                       Submit
             </button>
             <p>
-              Answer: {this.state.result}
+              Answer: <span style={{color: this.state.result.color}}>
+                          {this.state.result.text}
+                      </span>
             </p>
           </section>
         </main>
